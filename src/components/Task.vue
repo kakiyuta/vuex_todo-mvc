@@ -5,7 +5,7 @@
     <div class="view">
       <input class="toggle" type="checkbox" v-model="todo.completed" />
       <label @dblclick="editTodo(todo)">{{ todo.title }}</label>
-      <button class="destroy" @click="$emit('remove-todo', $event)"></button>
+      <button class="destroy" @click="$emit('remove-todo', todo)"></button>
     </div>
     <input
       class="edit"
@@ -44,7 +44,6 @@ export default {
       this.editedTodo = null;
       todo.title = todo.title.trim();
       if (!todo.title) {
-        // this.removeTodo(todo);
         this.$emit("remove-todo", todo);
       }
     },

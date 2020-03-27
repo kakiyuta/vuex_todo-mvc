@@ -65,37 +65,7 @@
 
 <script>
 import Task from './components/Task.vue'
-
-var STORAGE_KEY = "todos-vuejs-2.0";
-var todoStorage = {
-  fetch: function() {
-    var todos = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
-    todos.forEach(function(todo, index) {
-      todo.id = index;
-    });
-    todoStorage.uid = todos.length;
-    return todos;
-  },
-  save: function(todos) {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(todos));
-  }
-};
-
-var filters = {
-  all: function(todos) {
-    return todos;
-  },
-  active: function(todos) {
-    return todos.filter(function(todo) {
-      return !todo.completed;
-    });
-  },
-  completed: function(todos) {
-    return todos.filter(function (todo) {
-      return todo.completed;
-    });
-  }
-};
+import { mapState, mapMutations } from 'vuex'
 
 export default {
   name: 'app',
@@ -104,35 +74,28 @@ export default {
   },
   data: function() {
     return {
-      todos: todoStorage.fetch(),
       newTodo: "",
       editedTodo: null,
       visibility: "all"
     }
   },
-  watch: {
-    todos: {
-      handler: function (todos) {
-        todoStorage.save(todos);
-      },
-      deep: true
-    }
-  },
   computed: {
+    ...mapState([
+      'todos',
+      'uuid'
+    ]),
     filteredTodos: function () {
-      return filters[this.visibility](this.todos);
+      return this.$store.getters.filteredTodos(this.visibility);
     },
     remaining: function() {
-      return filters.active(this.todos).length;
+      return this.$store.getters.activeTodos.length;
     },
     allDone: {
       get: function() {
         return this.remaining === 0;
       },
       set: function(value) {
-        this.todos.forEach(function(todo) { 
-          todo.completed = value;
-        });
+        this.allChange(value);
       }
     },
   },
@@ -142,30 +105,26 @@ export default {
     }
   },
   methods: {
+    ...mapMutations([
+      'removeTodo',
+      'removeCompleted',
+      'allChange'
+    ]),
     addTodo: function() {
       var value = this.newTodo && this.newTodo.trim();
       if (!value) {
         return;
       }
-      this.todos.push({
-        id: todoStorage.uid++,
-        title:value,
-        completed: false
-      });
+      this.$store.commit('addTodo', value);
       this.newTodo = "";
-    },
-
-    removeTodo: function (todo) {
-      this.todos.splice(this.todos.indexOf(todo), 1);
-    },
-
-    removeCompleted: function () {
-      this.todos = filters.active(this.todos);
     },
 
     filtering: function(filterName) {
       this.visibility = filterName;
     }
+  },
+  beforeMount() {
+    // for debug
   }
 }
 </script>

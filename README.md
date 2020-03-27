@@ -1,5 +1,10 @@
 # vuex_toto-mvc
 
+## 概要
+
+以前作成したTODOアプリのvuex化
+https://github.com/kakiyuta/vue_todo-mvc
+
 ## Project setup
 ```
 npm install

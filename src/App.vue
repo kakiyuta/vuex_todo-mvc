@@ -65,7 +65,7 @@
 
 <script>
 import Task from './components/Task.vue'
-import { mapState, mapMutations } from 'vuex'
+import { mapState, mapGetters, mapMutations } from 'vuex'
 
 export default {
   name: 'app',
@@ -84,11 +84,15 @@ export default {
       todos: state => state.tasks.todos,
       uuid: state => sate.tasks.uuid
     }),
+    ...mapGetters('tasks', [
+      'filteredTasks',
+      'activeTodos'
+    ]),
     filteredTodos: function () {
-      return this.$store.getters.filteredTodos(this.visibility);
+      return this.filteredTasks(this.visibility);
     },
     remaining: function() {
-      return this.$store.getters.activeTodos.length;
+      return this.activeTodos.length;
     },
     allDone: {
       get: function() {
@@ -105,7 +109,7 @@ export default {
     }
   },
   methods: {
-    ...mapMutations([
+    ...mapMutations('tasks', [
       'removeTodo',
       'removeCompleted',
       'allChange'
@@ -125,7 +129,6 @@ export default {
   },
   beforeMount() {
     // for debug
-    console.log(this.todos);
   }
 }
 </script>

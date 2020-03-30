@@ -5,16 +5,12 @@ var TODOS = [
 ];
 
 export default {
+  namespaced: true,
   state: {
-    // todos: [],
     todos: TODOS,
-    // uuid: this.todos.length
     uuid: TODOS.length
   },
   getters: {
-    // length (state) {
-    //   return state.todos.length;
-    // },
     allTodos (state) {
       return state.todos;
     },
@@ -28,7 +24,7 @@ export default {
         return todo.completed;
       });
     },
-    filteredTodos: (state, getters) => (filter) => {
+    filteredTasks: (state, getters) => (filter) => {
         switch (filter) {
           case "all":
             return getters.allTodos;

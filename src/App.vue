@@ -80,10 +80,10 @@ export default {
     }
   },
   computed: {
-    ...mapState([
-      'todos',
-      'uuid'
-    ]),
+    ...mapState({
+      todos: state => state.tasks.todos,
+      uuid: state => sate.tasks.uuid
+    }),
     filteredTodos: function () {
       return this.$store.getters.filteredTodos(this.visibility);
     },
@@ -125,6 +125,7 @@ export default {
   },
   beforeMount() {
     // for debug
+    console.log(this.todos);
   }
 }
 </script>
